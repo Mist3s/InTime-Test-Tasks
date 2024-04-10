@@ -13,23 +13,23 @@ class User(AbstractUser):
         max_length=150,
         validators=(REGEX_SIGNS, REGEX_ME),
         verbose_name='Никнейм пользователя',
-        help_text='Укажите никнейм пользователя'
+        help_text='Укажите никнейм пользователя.'
     )
     email = models.EmailField(
         unique=True,
         max_length=254,
         verbose_name='E-mail пользователя',
-        help_text='Укажите e-mail пользователя'
+        help_text='Укажите e-mail пользователя.'
     )
     first_name = models.CharField(
         max_length=150,
         verbose_name='Имя пользователя',
-        help_text='Укажите имя пользователя'
+        help_text='Укажите имя пользователя.'
     )
     last_name = models.CharField(
         max_length=150,
         verbose_name='Фамилия пользователя',
-        help_text='Укажите фамилия пользователя'
+        help_text='Укажите фамилию пользователя.'
     )
     REQUIRED_FIELDS = ['first_name', 'last_name', 'username']
     USERNAME_FIELD = 'email'
