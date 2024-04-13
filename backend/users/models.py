@@ -2,12 +2,20 @@ from django.db import models
 from django.contrib.auth.models import AbstractUser
 from django.core.validators import RegexValidator
 
-REGEX_SIGNS = RegexValidator(r'^[\w.@+-]+\Z', 'Поддерживаемые символы.')
-REGEX_ME = RegexValidator(r'[^m][^e]', 'Имя пользователя не может быть "me".')
+REGEX_SIGNS = RegexValidator(
+    regex=r'^[\w.@+-]+\Z',
+    message='Поддерживаемые символы.'
+)
+REGEX_ME = RegexValidator(
+    regex=r'[^m][^e]',
+    message='Имя пользователя не может быть "me".'
+)
 
 
 class User(AbstractUser):
-    """Модель пользователей."""
+    """
+    Модель пользователей.
+    """
     username = models.CharField(
         unique=True,
         max_length=150,
@@ -41,3 +49,34 @@ class User(AbstractUser):
 
     def __str__(self):
         return self.email
+
+
+class AuthCode(models.Model):
+    """
+    Модель кода авторизации.
+    """
+    code = models.CharField(
+        max_length=6,
+        verbose_name='Код авторизации'
+    )
+    user = models.ForeignKey(
+        User,
+        related_name='auth_codes',
+        on_delete=models.CASCADE,
+        verbose_name='Пользователь'
+    )
+    datetime_end = models.DateTimeField(
+        verbose_name='Время действия'
+    )
+    used = models.BooleanField(
+        default=False,
+        verbose_name='Использован'
+    )
+
+    class Meta:
+        ordering = ('-datetime_end',)
+        verbose_name = 'Код активации'
+        verbose_name_plural = 'Коды активации'
+
+    def __str__(self):
+        return f'{self.code}/{self.used}'
