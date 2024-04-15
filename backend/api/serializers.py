@@ -6,7 +6,7 @@ from rest_framework import serializers
 from users.models import User, AuthCode
 
 
-class AuthTokenSerializer(serializers.Serializer):
+class AuthTokenSerializer(serializers.ModelSerializer):
     email = serializers.CharField(
         label=_("Email"),
         write_only=True
@@ -45,26 +45,22 @@ class AuthTokenSerializer(serializers.Serializer):
         return attrs
 
 
-class UserRegistrationSerializer(serializers.Serializer):
+class UserRegistrationSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
         fields = (
             'email',
-            'password',
-            'username',
-            'first_name',
-            'last_name',
+            'password'
         )
 
 
-class UserSerializer(serializers.Serializer):
+class UserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
         fields = (
             'email',
-            'username',
             'first_name',
             'last_name',
         )
