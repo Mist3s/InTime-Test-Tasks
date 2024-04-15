@@ -6,12 +6,12 @@ from .models import User, AuthCode
 @admin.register(User)
 class UserAdmin(admin.ModelAdmin):
     list_display = (
-        'id',
-        'username',
+        'email',
         'last_name',
-        'first_name',
-        'email'
+        'first_name'
     )
+    list_filter = ('email',)
+    search_fields = ('last_name', 'first_name', 'email')
 
 
 @admin.register(AuthCode)
