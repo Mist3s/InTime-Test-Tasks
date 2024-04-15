@@ -2,9 +2,10 @@ from django.utils import timezone
 from rest_framework import mixins, viewsets, status
 from rest_framework.authtoken.models import Token
 from rest_framework.response import Response
-from rest_framework.decorators import action, throttle_classes
+from rest_framework.decorators import action
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from django.contrib.auth.hashers import make_password
+from rest_framework.throttling import AnonRateThrottle
 
 from .serializers import (
     AuthTokenSerializer,
@@ -70,7 +71,7 @@ class UserTokenViewSet(mixins.CreateModelMixin,
         detail=False,
         permission_classes=(~IsAuthenticated,),
         url_path='code',
-        throttle_classes=[LowRequestThrottle,]
+        throttle_classes=[AnonRateThrottle, LowRequestThrottle,]
     )
     def create_authorization_code(self, request):
         if not (email := request.data.get('email')):

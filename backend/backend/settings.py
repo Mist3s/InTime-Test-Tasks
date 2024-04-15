@@ -145,7 +145,11 @@ REST_FRAMEWORK = {
     ],
     'DEFAULT_THROTTLE_CLASSES': [
         'api.throttles.LowRequestThrottle',
+        'rest_framework.throttling.AnonRateThrottle',
     ],
+    'DEFAULT_THROTTLE_RATES': {
+        'anon': '500/day',
+    }
 }
 
 EMAIL_BACKEND = 'django.core.mail.backends.filebased.EmailBackend'
