@@ -10,6 +10,7 @@ from rest_framework.views import APIView
 from rest_framework.compat import coreapi, coreschema
 from rest_framework.schemas import coreapi as coreapi_schema
 from rest_framework.schemas import ManualSchema
+from django.contrib.auth.hashers import make_password
 
 from .serializers import AuthTokenSerializer, UserRegistrationSerializer, UserSerializer
 from users.models import User
@@ -24,12 +25,15 @@ class UserTokenViewSet(mixins.CreateModelMixin,
     queryset = User.objects.all()
     permission_classes = (AllowAny,)
 
-    def create(self, request, *args, **kwargs):
-        serializer = self.get_serializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        user = serializer.save()
-        return Response(
-            data=UserSerializer(data=user)
+    def perform_create(self, serializer):
+        password = serializer.validated_data['password']
+        hasher_password = make_password(
+            password,
+            salt=None,
+            hasher='default'
+        )
+        serializer.save(
+            password=hasher_password
         )
 
     @action(
