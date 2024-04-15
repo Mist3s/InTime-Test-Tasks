@@ -17,7 +17,6 @@ from users.models import User
 class UserTokenViewSet(mixins.CreateModelMixin,
                        viewsets.GenericViewSet):
     serializer_class = UserRegistrationSerializer
-    queryset = User.objects.all()
     permission_classes = (AllowAny,)
 
     @action(

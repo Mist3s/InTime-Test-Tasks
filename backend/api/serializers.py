@@ -56,7 +56,7 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
 
     def to_representation(self, instance):
         """Переопределение сериализатора для выходных данных."""
-        return UserSerializer(
+        return UserShortSerializer(
             instance, context=self.context
         ).data
 
@@ -69,4 +69,13 @@ class UserSerializer(serializers.ModelSerializer):
             'email',
             'first_name',
             'last_name',
+        )
+
+
+class UserShortSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = User
+        fields = (
+            'email',
         )
