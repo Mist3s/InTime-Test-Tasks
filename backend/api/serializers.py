@@ -6,7 +6,7 @@ from rest_framework import serializers
 from users.models import User, AuthCode
 
 
-class AuthTokenSerializer(serializers.ModelSerializer):
+class AuthTokenSerializer(serializers.Serializer):
     email = serializers.CharField(
         label=_("Email"),
         write_only=True
@@ -53,6 +53,12 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
             'email',
             'password'
         )
+
+    def to_representation(self, instance):
+        """Переопределение сериализатора для выходных данных."""
+        return UserSerializer(
+            instance, context=self.context
+        ).data
 
 
 class UserSerializer(serializers.ModelSerializer):
