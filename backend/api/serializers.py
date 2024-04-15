@@ -33,7 +33,7 @@ class AuthTokenSerializer(serializers.Serializer):
             ).first()
             # The authenticate call simply returns None for is_active=False
             # users. (Assuming the default ModelBackend authentication
-            # backend.)
+            # user_api.)
             if not obj:
                 msg = _('Unable to log in with provided credentials.')
                 raise serializers.ValidationError(msg, code='authorization')
