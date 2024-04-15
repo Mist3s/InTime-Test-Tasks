@@ -17,7 +17,7 @@ from .utils import send_mail_confirmation_code, generate_authorization_code
 from .throttles import LowRequestThrottle
 
 
-class UserTokenViewSet(mixins.CreateModelMixin,
+class UserViewSet(mixins.CreateModelMixin,
                        viewsets.GenericViewSet):
     serializer_class = UserRegistrationSerializer
     permission_classes = (AllowAny,)
