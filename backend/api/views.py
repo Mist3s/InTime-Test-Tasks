@@ -11,7 +11,8 @@ from .serializers import (
     UserRegistrationSerializer,
     UserSerializer
 )
-from users.models import User
+from users.models import User, AuthCode
+from .utils import send_mail_confirmation_code, generate_authorization_code
 
 
 class UserTokenViewSet(mixins.CreateModelMixin,
@@ -61,6 +62,38 @@ class UserTokenViewSet(mixins.CreateModelMixin,
         )
         serializer.save(
             password=hasher_password
+        )
+
+    @action(
+        methods=['POST'],
+        detail=False,
+        permission_classes=(~IsAuthenticated,),
+        url_path='code'
+    )
+    def create_authorization_code(self, request):
+        if not (email := request.data.get('email')):
+            return Response(
+                data='Email must be provided.',
+                status=status.HTTP_400_BAD_REQUEST
+            )
+        if not (user := User.objects.filter(email=email).first()):
+            return Response(
+                data='User does not exist.',
+                status=status.HTTP_400_BAD_REQUEST
+            )
+        authorization_code = generate_authorization_code()
+        code = AuthCode.objects.create(
+            user=user,
+            code=authorization_code,
+            datetime_end=timezone.now() + timezone.timedelta(minutes=30)
+        )
+        send_mail_confirmation_code(
+            user=user,
+            authorization_code=code.code
+        )
+        return Response(
+            data='The authorization code has been sent by email.',
+            status=status.HTTP_201_CREATED
         )
 
     @action(
