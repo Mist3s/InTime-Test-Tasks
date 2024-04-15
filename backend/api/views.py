@@ -18,7 +18,7 @@ from .throttles import LowRequestThrottle
 
 
 class UserViewSet(mixins.CreateModelMixin,
-                       viewsets.GenericViewSet):
+                  viewsets.GenericViewSet):
     serializer_class = UserRegistrationSerializer
     permission_classes = (AllowAny,)
 
