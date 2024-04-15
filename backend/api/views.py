@@ -1,29 +1,57 @@
 from django.utils import timezone
-from django.contrib.auth import authenticate
 from rest_framework import mixins, viewsets, status
 from rest_framework.authtoken.models import Token
 from rest_framework.response import Response
 from rest_framework.decorators import action
 from rest_framework.permissions import IsAuthenticated, AllowAny
-from rest_framework.authtoken.views import ObtainAuthToken
-from rest_framework.views import APIView
-from rest_framework.compat import coreapi, coreschema
-from rest_framework.schemas import coreapi as coreapi_schema
-from rest_framework.schemas import ManualSchema
 from django.contrib.auth.hashers import make_password
 
-from .serializers import AuthTokenSerializer, UserRegistrationSerializer, UserSerializer
+from .serializers import (
+    AuthTokenSerializer,
+    UserRegistrationSerializer,
+    UserSerializer
+)
 from users.models import User
 
 
 class UserTokenViewSet(mixins.CreateModelMixin,
-                       mixins.RetrieveModelMixin,
-                       mixins.UpdateModelMixin,
-                       mixins.DestroyModelMixin,
                        viewsets.GenericViewSet):
     serializer_class = UserRegistrationSerializer
     queryset = User.objects.all()
     permission_classes = (AllowAny,)
+
+    @action(
+        methods=['GET'],
+        detail=False,
+        permission_classes=(IsAuthenticated,),
+        url_path='me'
+    )
+    def get_current_user_info(self, request):
+        serializer = UserSerializer(request.user)
+        return Response(
+            data=serializer.data,
+            status=status.HTTP_201_CREATED
+        )
+
+    @get_current_user_info.mapping.patch
+    def update_user_info(self, request):
+        serializer = UserSerializer(
+            request.user,
+            data=request.data,
+            partial=True
+        )
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(
+            data=serializer.data,
+            status=status.HTTP_200_OK
+        )
+
+    @get_current_user_info.mapping.delete
+    def delete_user(self, request):
+        user = request.user
+        user.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
 
     def perform_create(self, serializer):
         password = serializer.validated_data['password']
