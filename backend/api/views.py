@@ -13,7 +13,8 @@ from .serializers import (
     UserSerializer
 )
 from users.models import User, AuthCode
-from .utils import send_mail_confirmation_code, generate_authorization_code
+from .utils import generate_authorization_code
+from .tasks import send_mail_confirmation_code
 from .throttles import LowRequestThrottle
 
 
@@ -90,8 +91,8 @@ class UserViewSet(mixins.CreateModelMixin,
             code=authorization_code,
             datetime_end=timezone.now() + timezone.timedelta(minutes=30)
         )
-        send_mail_confirmation_code(
-            user=user,
+        send_mail_confirmation_code.delay(
+            email=user.email,
             authorization_code=code.code
         )
         return Response(

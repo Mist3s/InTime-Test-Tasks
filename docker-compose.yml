@@ -1,29 +1,67 @@
-version: '3'
+version: '3.9'
 
 volumes:
   pg_data:
   static:
-  data:
+  pgadmin_data:
 
 services:
-  db:
+  db_host:
     image: postgres:13
     env_file: .env
     volumes:
       - pg_data:/var/lib/postgresql/data
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    environment:
+      # Default email for pgAdmin 4
+      PGADMIN_DEFAULT_EMAIL: admin@email.com
+      # Password for pgAdmin 4
+      PGADMIN_DEFAULT_PASSWORD: adminpassword
+    ports:
+      # Map host port 5050 to container port 80
+      - "5050:80"
+    volumes:
+      # Mount a volume to persist pgAdmin 4 data
+      - pgadmin_data:/var/lib/pgadmin
+    depends_on:
+      # Ensure that this service starts after 'db'
+      - db_host
   backend:
     build: ./backend/
     env_file: .env
     volumes:
-      - data:/app/media/
       - static:/static/
     depends_on:
-      - db
+      - db_host
+      - rabbitmq
+  rabbitmq:
+    image: "rabbitmq:3-management"
+    ports:
+      - '15672:15672'
+      - '5672:5672'
+  celery:
+    build: ./backend/
+    command: celery -A backend worker -l info
+    depends_on:
+      - rabbitmq
+  flower:
+    build: ./backend/
+    command: celery -A backend flower
+    ports:
+      - '5555:5555'
+    depends_on:
+      - backend
+      - rabbitmq
+      - celery
   gateway:
     build: ./infra/
     env_file: .env
     ports:
-      - 8000:80
+      - '8000:80'
     volumes:
       - static:/static/
-      - data:/app/media/
+    depends_on:
+      - backend
+      - rabbitmq
+      - celery
