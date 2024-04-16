@@ -22,7 +22,7 @@
 
 Клонируйте проект из гитхаба:
 ```bash
-git clone git@github.com:Mist3s/InTime-Test-Tasks.git
+git clone git@github.com:Mist3s/user_restfull_api.git
 ```
 В корне проекта создать файл ".env", пример заполнения:
 ```text
