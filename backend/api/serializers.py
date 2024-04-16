@@ -1,4 +1,4 @@
-from django.contrib.auth import authenticate
+from django.contrib.auth.hashers import check_password
 from django.utils.translation import gettext_lazy as _
 
 from rest_framework import serializers
@@ -13,8 +13,6 @@ class AuthTokenSerializer(serializers.Serializer):
     )
     code = serializers.CharField(
         label=_("Code"),
-        # style={'input_type': 'password'},
-        # trim_whitespace=False,
         write_only=True
     )
     token = serializers.CharField(
@@ -27,14 +25,13 @@ class AuthTokenSerializer(serializers.Serializer):
         code = attrs.get('code')
 
         if email and code:
-            obj = AuthCode.objects.filter(
-                user__email=email,
-                code=code
-            ).first()
-            # The authenticate call simply returns None for is_active=False
-            # users. (Assuming the default ModelBackend authentication
-            # user_api.)
-            if not obj:
+            if not (obj := AuthCode.objects.filter(
+                user__email=email
+            ).first()):
+                msg = _('Unable to log in with provided credentials.')
+                raise serializers.ValidationError(msg, code='authorization')
+
+            if not check_password(code, obj.code):
                 msg = _('Unable to log in with provided credentials.')
                 raise serializers.ValidationError(msg, code='authorization')
         else:

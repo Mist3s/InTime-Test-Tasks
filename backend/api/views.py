@@ -86,14 +86,19 @@ class UserViewSet(mixins.CreateModelMixin,
                 status=status.HTTP_400_BAD_REQUEST
             )
         authorization_code = generate_authorization_code()
+        hasher_code = make_password(
+            authorization_code,
+            salt=None,
+            hasher='default'
+        )
         code = AuthCode.objects.create(
             user=user,
-            code=authorization_code,
+            code=hasher_code,
             datetime_end=timezone.now() + timezone.timedelta(minutes=30)
         )
         send_mail_confirmation_code.delay(
             email=user.email,
-            authorization_code=code.code
+            authorization_code=authorization_code
         )
         return Response(
             data='The authorization code has been sent by email.',
