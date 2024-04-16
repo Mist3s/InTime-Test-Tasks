@@ -13,11 +13,7 @@ services:
       - pg_data:/var/lib/postgresql/data
   pgadmin:
     image: dpage/pgadmin4:latest
-    environment:
-      # Default email for pgAdmin 4
-      PGADMIN_DEFAULT_EMAIL: admin@email.com
-      # Password for pgAdmin 4
-      PGADMIN_DEFAULT_PASSWORD: adminpassword
+    env_file: .env
     ports:
       # Map host port 5050 to container port 80
       - "5050:80"
