@@ -100,7 +100,7 @@ class AuthCode(models.Model):
     Authorization code model.
     """
     code = models.CharField(
-        max_length=6,
+        max_length=200,
         verbose_name='Authorization code'
     )
     user = models.ForeignKey(
