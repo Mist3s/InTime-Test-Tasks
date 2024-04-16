@@ -1,0 +1,265 @@
+openapi: 3.0.2
+info:
+  title: 'USER API'
+  version: ''
+paths:
+  /api/1v/users/:
+    post:
+      operationId: User registration
+      description: ''
+      parameters: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CustomUserCreate'
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomUserResponseOnCreate'
+          description: 'User successfully created'
+        '400':
+          $ref: '#/components/responses/ValidationError'
+      tags:
+        - Users
+  /api/1v/users/me/:
+    get:
+      operationId: Current user
+      description: ''
+      parameters: []
+      security:
+        - Token: [ ]
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+          description: ''
+        '401':
+          $ref: '#/components/responses/AuthenticationError'
+      tags:
+        - Users
+  /api/1v/users/code/:
+    post:
+      operationId: Get authorization code
+      description: An authorization code will be sent to the user by email.
+      parameters: [ ]
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CodeCreate'
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CodePostResponse'
+          description: ''
+      tags:
+        - Users
+  /api/1v/users/login/:
+    post:
+      operationId: Get authorization token
+      description: Used for authorization by email and authorization code to further use the token for requests.
+      parameters: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TokenCreate'
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TokenGetResponse'
+          description: ''
+      tags:
+        - Users
+  /api/1v/users/logout/:
+    delete:
+      operationId: Removing a token
+      description: Removes the current user's token
+      parameters: []
+      requestBody:
+        content:
+          application/json:
+            schema: {}
+
+      responses:
+        '204':
+          content:
+            application/json:
+              schema: {}
+          description: ''
+        '401':
+          $ref: '#/components/responses/AuthenticationError'
+      tags:
+        - Users
+components:
+  schemas:
+    User:
+      description:  'User'
+      type: object
+      properties:
+        email:
+          type: string
+          format: email
+          maxLength: 254
+          description: "E-mail address"
+        first_name:
+          type: string
+          maxLength: 150
+          description: "First name"
+          example: "Vasya"
+        last_name:
+          type: string
+          maxLength: 150
+          description: "Last name"
+          example: "Pupkin"
+
+    CustomUserCreate:
+      type: object
+      properties:
+        email:
+          type: string
+          format: email
+          maxLength: 254
+          description: "E-mail address"
+          example: "vpupkin@yandex.ru"
+        password:
+          type: string
+          maxLength: 150
+          description: "Password"
+          example: "Qwerty123"
+      required:
+        - password
+        - email
+    CustomUserResponseOnCreate:
+      type: object
+      properties:
+        email:
+          type: string
+          format: email
+          maxLength: 254
+          description: "E-mail address"
+          example: "vpupkin@yandex.ru"
+      required:
+        - email
+    SendEmailReset:
+      type: object
+      properties:
+        email:
+          type: string
+          format: email
+      required:
+        - email
+    CodeCreate:
+      type: object
+      properties:
+        email:
+          type: string
+      required:
+        - email
+    CodePostResponse:
+      type: object
+      properties:
+        detail:
+          type: string
+
+    TokenCreate:
+      type: object
+      properties:
+        code:
+          type: string
+        email:
+          type: string
+      required:
+        - email
+        - code
+    TokenGetResponse:
+      type: object
+      properties:
+        auth_token:
+          type: string
+
+    ValidationError:
+      description: DRF Validation Standard Errors
+      type: object
+      properties:
+        field_name:
+          description: 'The name of the field in which errors occurred. There can be several such fields'
+          example: [ 'Obligatory field.' ]
+          type: array
+          items:
+            type: string
+
+    SelfMadeError:
+      description: Error
+      type: object
+      properties:
+        errors:
+          description: 'Description of the error'
+          type: string
+
+    AuthenticationError:
+      description: User is not authorized
+      type: object
+      properties:
+        detail:
+          description: 'Description of the error'
+          example: "Credentials were not provided."
+          type: string
+
+    NotFound:
+      description: Объект не найден
+      type: object
+      properties:
+        detail:
+          description: 'Description of the error'
+          example: "Page not found."
+          type: string
+
+  responses:
+
+    ValidationError:
+      description: 'Validation errors in standard DRF format'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ValidationError'
+
+    NestedValidationError:
+      description: 'Validation errors in the standard DRF format, including with internal elements.'
+      content:
+        application/json:
+          schema:
+            oneOf:
+              - $ref: '#/components/schemas/ValidationError'
+
+    AuthenticationError:
+      description: User is not authorized
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/AuthenticationError'
+
+
+    NotFound:
+      description: Object not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/NotFound'
+
+
+  securitySchemes:
+    Token:
+      description: 'Authorization by token. <br>
+      All requests on behalf of the user must be made with the header "Authorization: Token TOKENVALUE"'
+      type: http
+      scheme: token
