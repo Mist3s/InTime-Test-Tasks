@@ -55,13 +55,10 @@ sudo docker compose exec backend python manage.py collectstatic
 sudo docker compose exec backend cp -r /app/static/. /static/static/
 ```
 Документация API доступна по адресу:
-```text
 [user-api.zapto.org/api/v1/docs/](https://user-api.zapto.org/api/v1/docs/)
-```
 или локально
-```text
 [127.0.0.1:8000/api/v1/docs/](http://127.0.0.1:8000/api/v1/docs/)
-```
+
 
 
 ## Установка Docker
