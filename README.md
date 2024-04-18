@@ -6,7 +6,7 @@ Implemented password storage in encrypted form using the Django Argon encryption
 Authorization was developed on the basis of sending OTP codes with a limited validity period to the user's email 
 using Celery.
 
-### Стек:
+### Stack:
 ![Django](https://img.shields.io/badge/django-%23092E20.svg?style=for-the-badge&logo=django&logoColor=white)
 ![DjangoREST](https://img.shields.io/badge/DJANGO-REST-ff1709?style=for-the-badge&logo=django&logoColor=white&color=ff1709&labelColor=gray)
 ![Docker](https://img.shields.io/badge/docker-%230db7ed.svg?style=for-the-badge&logo=docker&logoColor=white)
