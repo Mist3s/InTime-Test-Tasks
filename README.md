@@ -1,6 +1,6 @@
 # User REST API
 Тестовое задание на должность Python backend-developer, реализовать API пользователя на Django REST Framework. 
-В ходе выполнения тестового задания были разработаны конечных точек RESTful API регистрации пользователей, 
+В ходе выполнения тестового задания были разработаны конечные точеки RESTful API: регистрации пользователей, 
 входа в систему, получения профиля пользователя, обновления профиля пользователя и удаления учетной записи с 
 помощью Django Rest Framework (DRF). Внедрено хранение паролей в зашифрованном виде c использованием алгоритма 
 шифрования Django Argon. Разработана авторизация на основе отправки OTP кодов с ограниченным срокам действия 
@@ -22,7 +22,7 @@
 
 Клонируйте проект из гитхаба:
 ```bash
-git clone git@github.com:Mist3s/InTime-Test-Tasks.git
+git clone git@github.com:Mist3s/user_restfull_api.git
 ```
 В корне проекта создать файл ".env", пример заполнения:
 ```text
@@ -54,6 +54,13 @@ sudo docker compose exec backend python manage.py collectstatic
 ```bash
 sudo docker compose exec backend cp -r /app/static/. /static/static/
 ```
+Документация API доступна по адресу:
+[user-api.zapto.org/api/v1/docs/](https://user-api.zapto.org/api/v1/docs/)
+или локально
+[127.0.0.1:8000/api/v1/docs/](http://127.0.0.1:8000/api/v1/docs/)
+
+
+
 ## Установка Docker
 
 <details>
