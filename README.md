@@ -1,10 +1,10 @@
 # User REST API
-Тестовое задание на должность Python backend-developer, реализовать API пользователя на Django REST Framework. 
-В ходе выполнения тестового задания были разработаны конечные точеки RESTful API: регистрации пользователей, 
-входа в систему, получения профиля пользователя, обновления профиля пользователя и удаления учетной записи с 
-помощью Django Rest Framework (DRF). Внедрено хранение паролей в зашифрованном виде c использованием алгоритма 
-шифрования Django Argon. Разработана авторизация на основе отправки OTP кодов с ограниченным срокам действия 
-на почту пользователю используя Celery.
+Test task for the position of Python backend developer, to implement a user API on Django REST Framework. 
+During the test task, the following RESTful API endpoints were developed: user registration, login, 
+getting a user profile, updating a user profile, and deleting an account using Django Rest Framework (DRF). 
+Implemented password storage in encrypted form using the Django Argon encryption algorithm. 
+Authorization was developed on the basis of sending OTP codes with a limited validity period to the user's email 
+using Celery.
 
 ### Стек:
 ![Django](https://img.shields.io/badge/django-%23092E20.svg?style=for-the-badge&logo=django&logoColor=white)
@@ -16,15 +16,15 @@
 ![RabbitMQ](https://img.shields.io/badge/Rabbitmq-FF6600?style=for-the-badge&logo=rabbitmq&logoColor=white)
 
 
-## Установка
+## Installation
 
-Для развертывания проекта, используйте `docker-compose.yml`. Убедитесь, что у вас [установлен Docker](#установка-docker) и Docker Compose.
+To deploy the project, use`docker-compose.yml`. Make sure you have [Docker installed](#installing-docker) and Docker Compose.
 
-Клонируйте проект из гитхаба:
+Clone the project from Github:
 ```bash
 git clone git@github.com:Mist3s/user_restfull_api.git
 ```
-В корне проекта создать файл ".env", пример заполнения:
+Create a ".env" file in the project root, filling example:
 ```text
 POSTGRES_USER=django_user
 POSTGRES_PASSWORD=mysecretpassword
@@ -37,11 +37,11 @@ PGADMIN_DEFAULT_EMAIL=admin@email.com
 PGADMIN_DEFAULT_PASSWORD=adminpassword
 ```
 
-Запустите Docker Compose с этой конфигурацией на своём компьютере
+Run Docker Compose with this configuration on your machine
 ```bash
 docker compose up -d
 ```
-Выполните миграции, соберите статические файлы бэкенда и скопируйте их в /static/static/:
+Run the migrations, collect the backend static files and copy them to /static/static/:
 ```bash
 sudo docker compose exec backend python manage.py makemigrations
 ```
@@ -54,17 +54,17 @@ sudo docker compose exec backend python manage.py collectstatic
 ```bash
 sudo docker compose exec backend cp -r /app/static/. /static/static/
 ```
-Документация API доступна по адресу:
+API documentation is available at:
 [user-api.zapto.org/api/v1/docs/](https://user-api.zapto.org/api/v1/docs/)
-или локально
+or locally
 [127.0.0.1:8000/api/v1/docs/](http://127.0.0.1:8000/api/v1/docs/)
 
 
 
-## Установка Docker
+## Installing Docker
 
 <details>
-<summary>Установка на Ubuntu</summary>
+<summary>Installation on Ubuntu</summary>
 
 1. ```bash
     sudo apt-get update
@@ -93,22 +93,22 @@ sudo docker compose exec backend cp -r /app/static/. /static/static/
 </details>
 
 <details>
-<summary>Установка на Windows</summary>
+<summary>Installation on Windows</summary>
 
-1. Скачайте установщик Docker Desktop с [официального сайта Docker](https://www.docker.com/products/docker-desktop) и выполните его установку.
-2. Запустите Docker Desktop после установки.
+1. Download the Docker Desktop installer from [the official Docker website](https://www.docker.com/products/docker-desktop) and install it.
+2. Launch Docker Desktop after installation.
 
 </details>
 
 <details>
-<summary>Установка на macOS</summary>
+<summary>Installation on macOS</summary>
 
-1. Скачайте установщик Docker Desktop с [официального сайта Docker](https://www.docker.com/products/docker-desktop) и выполните его установку.
-2. Запустите Docker Desktop после установки.
+1. Download the Docker Desktop installer from [the official Docker website](https://www.docker.com/products/docker-desktop) and install it.
+2. Launch Docker Desktop after installation.
 
 </details>
 
-## Об авторе
-Python-разработчик
+## About the author
+Python developer
 
-[Андрей Иванов](https://github.com/Mist3s)
+[Andrey Ivanov](https://github.com/Mist3s)
