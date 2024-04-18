@@ -15,7 +15,7 @@ using Celery.
 ![Postgres](https://img.shields.io/badge/postgres-%23316192.svg?style=for-the-badge&logo=postgresql&logoColor=white)
 ![RabbitMQ](https://img.shields.io/badge/Rabbitmq-FF6600?style=for-the-badge&logo=rabbitmq&logoColor=white)
 ![Nginx](https://img.shields.io/badge/nginx-%23009639.svg?style=for-the-badge&logo=nginx&logoColor=white)
-![Flower](https://img.shields.io/badge/flower-1CE783?style=for-the-badge&logo=hulu&logoColor=white)
+![Flower](https://img.shields.io/badge/flower-8bca59?style=for-the-badge&logo=hulu&logoColor=white)
 
 
 
