@@ -35,6 +35,8 @@ SECRET_KEY='django-insecure-b9)zjp+%-wty5656gfdh5pw4qr(-452xrn_xrlinz^!+@=dk&96'
 DEBUG=False
 PGADMIN_DEFAULT_EMAIL=admin@email.com
 PGADMIN_DEFAULT_PASSWORD=adminpassword
+RABBITMQ_DEFAULT_USER=rabbitmq
+RABBITMQ_DEFAULT_PASS=rabbitmq
 ```
 
 Run Docker Compose with this configuration on your machine
