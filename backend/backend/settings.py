@@ -167,6 +167,7 @@ EMAIL_BACKEND = 'django.core.mail.backends.filebased.EmailBackend'
 
 EMAIL_FILE_PATH = BASE_DIR / 'sent_emails'
 
-CELERY_BROKER_URL = 'amqp://guest:guest@rabbitmq'
+CELERY_BROKER_URL = (f"amqp://{os.getenv('RABBITMQ_DEFAULT_USER')}"
+                     f":{os.getenv('RABBITMQ_DEFAULT_PASS')}@rabbitmq")
 
 CELERY_RESULT_BACKEND = 'rpc://'

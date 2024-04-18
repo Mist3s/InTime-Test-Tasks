@@ -4,15 +4,32 @@ volumes:
   pg_data:
   static:
   pgadmin_data:
+  rabbitmq_data:
+    driver: local
+  celery_data:
+    driver: local
 
 services:
+  rabbitmq:
+    image: "rabbitmq:3-management"
+    ports:
+      - '15672:15672'
+      - '5672:5672'
+    env_file: .env
+    healthcheck:
+      test: [ "CMD", "rabbitmq-diagnostics", "status" ]
+      interval: 25s
+      timeout: 15s
+      retries: 3
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq
   db_host:
     image: postgres:13
     env_file: .env
     volumes:
       - pg_data:/var/lib/postgresql/data
   pgadmin:
-    image: dpage/pgadmin4:latest
+    image: "dpage/pgadmin4:latest"
     env_file: .env
     ports:
       # Map host port 5050 to container port 80
@@ -31,25 +48,28 @@ services:
     depends_on:
       - db_host
       - rabbitmq
-  rabbitmq:
-    image: "rabbitmq:3-management"
-    ports:
-      - '15672:15672'
-      - '5672:5672'
   celery:
     build: ./backend/
     command: celery -A backend worker -l info
     depends_on:
-      - rabbitmq
+      rabbitmq:
+        condition: service_healthy
+    env_file: .env
+    volumes:
+      - celery_data:/celery
   flower:
-    build: ./backend/
-    command: celery -A backend flower
+    image: "mher/flower:0.9.7"
+    command: [
+      'flower',
+      '--broker=amqp://${RABBITMQ_DEFAULT_USER}:${RABBITMQ_DEFAULT_PASS}@rabbitmq',
+      '--broker_api=http://${RABBITMQ_DEFAULT_USER}:${RABBITMQ_DEFAULT_PASS}@rabbitmq:15672/api/',
+      '--port=5555',
+    ]
     ports:
       - '5555:5555'
     depends_on:
-      - backend
-      - rabbitmq
       - celery
+    env_file: .env
   gateway:
     build: ./infra/
     env_file: .env
