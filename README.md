@@ -61,7 +61,7 @@ sudo docker compose exec backend python manage.py collectstatic
 sudo docker compose exec backend cp -r /app/static/. /static/static/
 ```
 API documentation is available at:
-[user-api.zapto.org/api/v1/docs/](https://user-api.zapto.org/api/v1/docs/)
+[user-restfull-api.mist3s.site/api/v1/docs/](https://user-restfull-api.mist3s.site/api/v1/docs/)
 or locally
 [127.0.0.1:8000/api/v1/docs/](http://127.0.0.1:8000/api/v1/docs/)
 
